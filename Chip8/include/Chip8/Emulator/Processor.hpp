@@ -9,7 +9,7 @@ public:
 	~Chip8Processor();
 
 	void initialize();
-	void loadGame(const char * name);
+	bool loadGame(const char *name);
 	void newCycle();
 	void updateDisplay();
 	void updateKeys();

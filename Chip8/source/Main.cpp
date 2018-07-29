@@ -7,7 +7,10 @@ int main(int argc, char const *argv[])
 
 	Chip8Processor chip8Processor;
 	chip8Processor.initialize();
-	chip8Processor.loadGame("");	// No game just yet... :(
+
+	// Crash the emulator when loading fails
+	if (!chip8Processor.loadGame("../roms/games/Missile [David Winter].ch8"))
+		return -1;
 
 	// Main application loop
 	while (!chip8Processor.quitFlag)

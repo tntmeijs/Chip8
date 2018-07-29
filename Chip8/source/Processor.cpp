@@ -1,4 +1,7 @@
 #include "Chip8/Emulator/Processor.hpp"
+#include "Chip8/Utility/DataTypes.hpp"
+
+#include <fstream>
 
 Chip8Processor::Chip8Processor()
 {
@@ -39,8 +42,36 @@ void Chip8Processor::initialize()
 		m_stack[l] = 0;
 }
 
-void Chip8Processor::loadGame(const char * name)
+bool Chip8Processor::loadGame(const char *name)
 {
+	// Load the binary data
+	FILE *filePtr = fopen(name, "rb");
+
+	// The file needs to be open for this to work
+	if (filePtr == nullptr)
+		return false;
+
+	long fileSize = 0.0;
+
+	// Retrieve the size of the file by seeking all the way to the end
+	fseek(filePtr, 0, SEEK_END);	// Seek to end of the file
+	long fileSize = ftell(filePtr); // Get the current file pointer
+	fseek(filePtr, 0, SEEK_SET);	// Seek back to beginning of the file
+
+	// Allocate a buffer of the same size as the ROM
+	byte *romData = new byte[fileSize];
+	fread(romData, sizeof(byte), fileSize, filePtr);
+	fclose(filePtr);
+
+	// Save the ROM to the memory of the processor (offset of 0x200 a.k.a. 512 bytes to account for the reserved space)
+	for (long i = 0; i < fileSize; ++i)
+		m_memory[512 + i] = romData[i];
+
+	// No need to keep this data around any longer
+	delete[] romData;
+
+	// Successfully loaded the ROM!
+	return true;
 }
 
 void Chip8Processor::newCycle()

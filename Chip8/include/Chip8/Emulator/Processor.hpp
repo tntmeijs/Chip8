@@ -13,32 +13,40 @@ public:
 	void newCycle();
 	void updateDisplay();
 	void updateKeys();
+	void finalize();
+
+	byte *getMemoryStart() const;
 
 	byte drawFlag;
 	byte quitFlag;
 
+	const word MEMORY_SIZE_BYTES = 4096;
+
 private:
+	// Flag that indicates whether the memory has already been deallocated
+	byte m_finalizeCalled;
+
 	// The processor has 4096 bytes of memory
-	byte m_memory[4096];
+	byte *m_memory;
 
 	// The display has a resolution of 64x32 pixels
-	byte m_graphicsMemory[64 * 32];
+	byte *m_graphicsMemory;
 
 	// 16 Registers (8-bit) in total
-	byte m_V[16];
+	byte *m_V;
 
 	// Timers
 	byte m_delayTimer;
 	byte m_soundTimer;
 
 	// Stack (24 levels of nesting)
-	byte m_stack[24];
+	byte *m_stack;
 
 	// Stack pointer to keep track of the current level in the stack
 	byte m_SP;
 
 	// Hex keypad
-	byte m_key[16];
+	byte * m_key;
 	
 	// A single OpCode is 2 bytes
 	word m_opCode;

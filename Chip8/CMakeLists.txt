@@ -16,5 +16,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
 
 add_executable(Chip8 ${SOURCE_FILES} ${HEADER_FILES})
 
-# Copy the ROM files to the executable
+# Copy the ROM files to the "/bin/" folder
 file(COPY ${PROJECT_SOURCE_DIR}/roms DESTINATION ${CMAKE_BINARY_DIR}/bin)
+
+# Also copy the ROM files to the root project folder, as this will allow users to run the application from within an IDE like Visual Studio itself
+file(COPY ${PROJECT_SOURCE_DIR}/roms DESTINATION ${CMAKE_BINARY_DIR})

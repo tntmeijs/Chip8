@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "Chip8/Emulator/Processor.hpp"
 
 int main(int argc, char const *argv[])
@@ -10,7 +12,13 @@ int main(int argc, char const *argv[])
 
 	// Crash the emulator when loading fails
 	if (!chip8Processor.loadGame("../roms/games/Missile [David Winter].ch8"))
+	{
+		printf("Failed to the ROM.\n");
+		std::cin.get();
 		return -1;
+	}
+
+	printf("ROM successfully loaded.\n");
 
 	// Main application loop
 	while (!chip8Processor.quitFlag)

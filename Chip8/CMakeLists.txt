@@ -5,10 +5,12 @@ include_directories(${PROJECT_SOURCE_DIR}/include/)
 
 set(HEADER_FILES
     ${PROJECT_SOURCE_DIR}/include/Chip8/Utility/DataTypes.hpp
+    ${PROJECT_SOURCE_DIR}/include/Chip8/Utility/Disassembler.hpp
     ${PROJECT_SOURCE_DIR}/include/Chip8/Emulator/Processor.hpp)
 
 set(SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/source/Main.cpp
+    ${PROJECT_SOURCE_DIR}/source/Disassembler.cpp
     ${PROJECT_SOURCE_DIR}/source/Processor.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY

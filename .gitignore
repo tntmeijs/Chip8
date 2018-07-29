@@ -4,3 +4,6 @@ CMakeScripts
 Makefile
 cmake_install.cmake
 install_manifest.txt
+
+# Exclude the build folder from this repository, as this only contains generated files
+[Bb]uild/

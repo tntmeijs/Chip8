@@ -11,4 +11,7 @@ set(SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/source/Main.cpp
     ${PROJECT_SOURCE_DIR}/source/Processor.cpp)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
+    ${CMAKE_BINARY_DIR}/bin)
+
 add_executable(Chip8 ${SOURCE_FILES} ${HEADER_FILES})

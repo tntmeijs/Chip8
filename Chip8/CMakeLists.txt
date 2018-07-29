@@ -15,3 +15,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
     ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(Chip8 ${SOURCE_FILES} ${HEADER_FILES})
+
+# Copy the ROM files to the executable
+file(COPY ${PROJECT_SOURCE_DIR}/roms DESTINATION ${CMAKE_BINARY_DIR}/bin)

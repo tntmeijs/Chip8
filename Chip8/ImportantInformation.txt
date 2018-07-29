@@ -87,7 +87,13 @@ Therefore, using this register as a regular register should be avoided.
 =============
 === INPUT ===
 =============
-- TBD
+- Hexadecimal key input.
+- Key values are in the range 0x0 to 0xF.
+- Usually, keys 2 / 4 / 6 / 8 are used for directional input.
+- Three OpCodes are used to detect input:
+    - One skips an instruction when a specific key is pressed.
+    - One skips an instruction when a specific key is released.
+    - One waits for a key press and stores it in one of the data registers.
 
 ===============
 === OpCodes ===

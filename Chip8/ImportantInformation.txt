@@ -1,0 +1,95 @@
+This file is used to list all important information about the Chip8 architecture.
+Please bear in mind that this document is a personal notepad. It is by no means an
+official document that can be relied upon.
+
+https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description
+
+That being said, most of this information should be correct. Feel free to use it
+as you see fit. Just bear in mind that I may have made some mistakes while writing this.
+
+- Tahar Meijs
+
+=================
+=== REGISTERS ===
+=================
+
+The address register of the Chip8 is called "I" and is 16 bits wide.
+The program counter, "PC", is 16 bits wide as well.
+
+Chip8 has 16 registers:
+- V0
+- V1
+- V2
+- V3
+- V4
+- V5
+- V6
+- V7
+- V8
+- V9
+- VA
+- VB
+- VC
+- VD
+- VE
+- VF
+
+The "VF" register is special, as it doubles as a flag:
+- Addition              ==> carry flag
+- Subtraction           ==> no borrow flag
+- Rendering / drawing   ==> set upon pixel collision (see the graphics paragraph)
+
+Therefore, using this register as a regular register should be avoided.
+
+==============
+=== MEMORY ===
+==============
+
+- The Chip8 has 4096 memory locations (0x1000), each 1 byte wide.
+- The first 512 bytes (0x200) is where the Chip8 interpreter used to live.
+  Nowadays, this memory is used for additional (font) information, as emulators
+  usually run outside fo the 4k memory space.
+- Because of this reserved memory for the interpreter, almost every program
+  starts at location 0x200 (512 bytes into the memory block).
+- The last 256 bytes in memory (0xF00 to 0xFFF) are reserved for display refresh.
+- The 96 bytes below the display refresh reserved memory is reserved for
+  call stack / internal use / other variables.
+
+=============
+=== STACK ===
+=============
+
+- The stack only stores subroutine return addresses.
+- Originally, 48 bytes were allocated for the stack, allowing up to 24 levels of
+  nesting to be stored. These days, the stack stores at least 16 levels.
+
+==============
+=== TIMERS ===
+==============
+- Chip8 has two timers, a delay timer and a sound timer. Both count down at a speed
+  of 60 Hz and stop when they reach zero.
+- Sound timer is used to play sound effects. A beep is played when the timer value is non-zero.
+- Delay timer is used in games. The application has read / write access to this timer.
+
+================
+=== GRAPHICS ===
+================
+
+- Monochrone black / white display.
+- Resolution of 64x32 pixels.
+- Sprites are 8 pixels wide and 1 to 15 pixels tall.
+- Sprite pixels are XOR'd with corresponding screen pixels.
+  Sprite pixels that are set flip the color of the corresponding screen pixel, while
+  unset sprite pixels do nothing. The carry flag (VF register) is set to 1 when any
+  pixels are flipped from set to unset when drawing a sprite. Otherwise it is set to 0.
+  This is used for collision detection.
+
+=============
+=== INPUT ===
+=============
+- TBD
+
+===============
+=== OpCodes ===
+===============
+- TBD

@@ -1,6 +1,8 @@
 project(Chip8)
 
 # Include the headers located in "include/Chip8/"
+include_directories(${PROJECT_SOURCE_DIR}/include/)
+
 set(HEADER_FILES
     ${PROJECT_SOURCE_DIR}/include/Chip8/Utility/DataTypes.hpp
     ${PROJECT_SOURCE_DIR}/include/Chip8/Emulator/Processor.hpp)

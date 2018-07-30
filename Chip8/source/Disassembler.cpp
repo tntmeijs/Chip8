@@ -44,7 +44,7 @@ void Chip8Disassembler::disassemble(word startLocationOfPC, word memorySize, byt
 				break;
 
 			default:
-				// This, most likely, is the "SYS" command that calls an RCA 1802 program
+				// The "SYS" command that calls an RCA 1802 program
 				printf("SYS\t0x%3X\n", opCode & 0x0FFF);
 				break;
 			}
@@ -118,8 +118,7 @@ void Chip8Disassembler::disassemble(word startLocationOfPC, word memorySize, byt
 				break;
 
 			default:
-				// Make sure to go to the next line, even though no valid OpCode was detected
-				printf("NO VALID OPCODE FOUND\n");
+				printf("\n");
 				break;
 			}
 			break;
@@ -156,8 +155,7 @@ void Chip8Disassembler::disassemble(word startLocationOfPC, word memorySize, byt
 				break;
 
 			default:
-				// Make sure to go to the next line, even though no valid OpCode was detected
-				printf("NO VALID OPCODE FOUND\n");
+				printf("\n");
 				break;
 			}
 			break;
@@ -202,15 +200,13 @@ void Chip8Disassembler::disassemble(word startLocationOfPC, word memorySize, byt
 				break;
 
 			default:
-				// Make sure to go to the next line, even though no valid OpCode was detected
-				printf("NO VALID OPCODE FOUND\n");
+				printf("\n");
 				break;
 			}
 			break;
 
 		default:
-			// Make sure to go to the next line, even though no valid OpCode was detected
-			printf("NO VALID OPCODE FOUND\n");
+			printf("\n");
 			break;
 		}
 

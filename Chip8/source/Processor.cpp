@@ -24,6 +24,7 @@ void Chip8Processor::initialize()
 	drawFlag			= 0;		// Reset draw flag
 	quitFlag			= 0;		// Reset quit flag
 	m_finalizeCalled	= 0;		// Reset finalization flag
+	m_applicationSize	= 0;		// Reset the size of the loaded application or game
 
 	// Reset the memory
 	m_memory = new byte[MEMORY_SIZE_BYTES];
@@ -59,20 +60,18 @@ bool Chip8Processor::loadGame(const char *name)
 	if (filePtr == nullptr)
 		return false;
 
-	long fileSize = 0;
-
 	// Retrieve the size of the file by seeking all the way to the end
 	fseek(filePtr, 0, SEEK_END);	// Seek to end of the file
-	fileSize = ftell(filePtr); // Get the current file pointer
+	m_applicationSize = ftell(filePtr); // Get the current file pointer
 	fseek(filePtr, 0, SEEK_SET);	// Seek back to beginning of the file
 
 	// Allocate a buffer of the same size as the ROM
-	byte *romData = new byte[fileSize];
-	fread(romData, sizeof(byte), fileSize, filePtr);
+	byte *romData = new byte[m_applicationSize];
+	fread(romData, sizeof(byte), m_applicationSize, filePtr);
 	fclose(filePtr);
 
 	// Save the ROM to the memory of the processor (offset of 0x200 a.k.a. 512 bytes to account for the reserved space)
-	for (long i = 0; i < fileSize; ++i)
+	for (long i = 0; i < m_applicationSize; ++i)
 		m_memory[512 + i] = romData[i];
 
 	// No need to keep this data around any longer
@@ -103,6 +102,16 @@ void Chip8Processor::finalize()
 	delete[] m_key;
 
 	m_finalizeCalled = 1;
+}
+
+const word Chip8Processor::getPC() const
+{
+	return m_PC;
+}
+
+const long Chip8Processor::getApplicationSize() const
+{
+	return m_applicationSize;
 }
 
 byte *Chip8Processor::getMemoryStart() const

@@ -15,6 +15,9 @@ public:
 	void updateKeys();
 	void finalize();
 
+	const word getPC() const;
+	const long getApplicationSize() const;
+
 	byte *getMemoryStart() const;
 
 	byte drawFlag;
@@ -56,4 +59,7 @@ private:
 
 	// Program counter (16 bits)
 	word m_PC;
+
+	// Size of the loaded application or game
+	long m_applicationSize;
 };

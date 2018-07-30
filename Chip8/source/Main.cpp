@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Chip8/Emulator/Processor.hpp"
+#include "Chip8/Utility/Disassembler.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -19,6 +20,9 @@ int main(int argc, char const *argv[])
 	}
 
 	printf("ROM successfully loaded.\n");
+
+	Chip8Disassembler chip8Disassembler;
+	chip8Disassembler.disassemble(chip8Processor.getPC(), chip8Processor.getApplicationSize(), chip8Processor.getMemoryStart());
 
 	// Main application loop
 	while (!chip8Processor.quitFlag)

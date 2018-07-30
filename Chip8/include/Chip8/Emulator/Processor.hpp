@@ -13,6 +13,7 @@ public:
 	void newCycle();
 	void updateDisplay();
 	void updateKeys();
+	void updateTimers();
 	void finalize();
 
 	const word getPC() const;

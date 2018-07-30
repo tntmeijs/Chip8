@@ -274,6 +274,16 @@ void Chip8Processor::updateKeys()
 {
 }
 
+void Chip8Processor::updateTimers()
+{
+	// Update the delay timer and the sound timer if necessary
+	if (m_delayTimer > 0)
+		--m_delayTimer;
+
+	if (m_soundTimer > 0)
+		--m_soundTimer;
+}
+
 void Chip8Processor::finalize()
 {
 	delete[] m_memory;

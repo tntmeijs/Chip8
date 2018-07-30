@@ -36,19 +36,16 @@ void Chip8Processor::initialize()
 	for (size_t j = 0; j < 64 * 32; ++j)
 		m_graphicsMemory[j] = 0;
 
-	// Reset registers and keys
+	// Reset registers, stack, and keys
 	m_V		= new byte[16];
 	m_key	= new byte[16];
+	m_stack = new byte[16];
 	for (size_t k = 0; k < 16; ++k)
 	{
 		m_V[k]		= 0;
 		m_key[k]	= 0;
+		m_stack[k]	= 0;
 	}
-
-	// Reset stack
-	m_stack = new byte[24];
-	for (size_t l = 0; l < 24; ++l)
-		m_stack[l] = 0;
 }
 
 bool Chip8Processor::loadGame(const char *name)
@@ -83,6 +80,190 @@ bool Chip8Processor::loadGame(const char *name)
 
 void Chip8Processor::newCycle()
 {
+	// Fetch OpCode (combines two bytes into a word)
+	word opCode = m_memory[m_PC] << 8 | m_memory[m_PC + 1];
+
+	// Decode the first number of the OpCode
+	switch (opCode & 0xF000)
+	{
+	case 0x0000:
+		switch (opCode & 0x000F)
+		{
+			// CLS
+		case 0x0000:
+			break;
+
+			// RET
+		case 0x000E:
+			break;
+
+			// SYS address
+		default:
+			break;
+		}
+		break;
+
+		// JP address
+	case 0x1000:
+		break;
+
+		// CALL address
+	case 0x2000:
+		break;
+
+		// SE Vx, byte
+	case 0x3000:
+		break;
+
+		// SNE Vx, byte
+	case 0x4000:
+		break;
+
+		// SE Vx, Vy
+	case 0x5000:
+		break;
+
+		// LD Vx, byte
+	case 0x6000:
+		break;
+
+		// ADD Vx, byte
+	case 0x7000:
+		break;
+
+	case 0x8000:
+		switch (opCode & 0x000F)
+		{
+			// LD Vx, Vy
+		case 0x0000:
+			break;
+
+			// OR Vx, Vy
+		case 0x0001:
+			break;
+
+			// AND Vx, Vy
+		case 0x0002:
+			break;
+
+			// XOR Vx, Vy
+		case 0x0003:
+			break;
+
+			// ADD Vx, Vy
+		case 0x0004:
+			break;
+
+			// SUB Vx, Vy
+		case 0x0005:
+			break;
+
+			// SHR Vx {, Vy}
+		case 0x0006:
+			break;
+
+			// SUBN Vx, Vy
+		case 0x0007:
+			break;
+
+			// SHL Vx {, Vy}
+		case 0x000E:
+			break;
+
+		default:
+			break;
+		}
+		break;
+
+		// SNE Vx, Vy
+	case 0x9000:
+		break;
+
+		// LD I, addr
+	case 0xA000:
+		break;
+
+		// JP V0, addr
+	case 0xB000:
+		break;
+
+		// RND Vx, byte
+	case 0xC000:
+		break;
+
+		// DRW Vx, Vy, nibble
+	case 0xD000:
+		break;
+
+	case 0xE000:
+		switch (opCode & 0x00FF)
+		{
+			// SKP Vx
+		case 0x009E:
+			break;
+
+			// SKNP Vx
+		case 0x00A1:
+			break;
+
+		default:
+			break;
+		}
+		break;
+
+	case 0xF000:
+		switch (opCode & 0x00FF)
+		{
+			// LD Vx, DT
+		case 0x0007:
+			break;
+
+			// LD Vx, K
+		case 0x000A:
+			break;
+
+			// LD DT, Vx
+		case 0x0015:
+			break;
+			
+			// LD ST, Vx
+		case 0x0018:
+			printf("LD\tST, V%1X\n", (opCode & 0x0F00) >> 8);
+			break;
+
+			// ADD I, Vx
+		case 0x001E:
+			printf("ADD\tI, V%1X\n", (opCode & 0x0F00) >> 8);
+			break;
+
+			// LD F, Vx
+		case 0x0029:
+			printf("LD\tF, V%1X\n", (opCode & 0x0F00) >> 8);
+			break;
+
+			// LD B, Vx
+		case 0x0033:
+			printf("LD\tB, V%1X\n", (opCode & 0x0F00) >> 8);
+			break;
+
+			// LD [I], Vx
+		case 0x0055:
+			printf("LD\t[I], V%1X\n", (opCode & 0x0F00) >> 8);
+			break;
+
+			// LD Vx, [I]
+		case 0x0065:
+			printf("LD\tV%1X, [I]\n", (opCode & 0x0F00) >> 8);
+			break;
+
+		default:
+			break;
+		}
+		break;
+
+	default:
+		break;
+	}
 }
 
 void Chip8Processor::updateDisplay()

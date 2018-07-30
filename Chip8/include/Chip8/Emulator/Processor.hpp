@@ -42,7 +42,7 @@ private:
 	byte m_delayTimer;
 	byte m_soundTimer;
 
-	// Stack (24 levels of nesting)
+	// Stack (16 levels of nesting)
 	byte *m_stack;
 
 	// Stack pointer to keep track of the current level in the stack

@@ -44,7 +44,7 @@ void Chip8Disassembler::disassemble(word startLocationOfPC, word memorySize, byt
 				break;
 
 			default:
-				// The "SYS" command that calls an RCA 1802 program
+				// The "SYS" command that calls a RCA 1802 program
 				printf("SYS\t0x%3X\n", opCode & 0x0FFF);
 				break;
 			}

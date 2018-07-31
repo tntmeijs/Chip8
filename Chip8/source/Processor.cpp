@@ -1,6 +1,9 @@
 #include "Chip8/Emulator/Processor.hpp"
 #include "Chip8/Utility/DataTypes.hpp"
 
+// Need this to debug the instructions that are executing during a cycle
+#include "Chip8/Utility/Disassembler.hpp"
+
 #include <fstream>
 #include <random>
 #include <chrono>
@@ -85,7 +88,7 @@ void Chip8Processor::newCycle()
 	// Fetch OpCode (combines two bytes into a word)
 	word opCode = m_memory[m_PC] << 8 | m_memory[m_PC + 1];
 
-	printf("Current opCode:\t0x%04X\n", opCode);
+	Chip8Disassembler::printOpCode(opCode);
 
 	// TODO: use function pointers instead of this horrible switch statement
 	// Decode the first number of the OpCode

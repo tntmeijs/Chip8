@@ -23,15 +23,15 @@ int main(int argc, char const *argv[])
 	printf("ROM successfully loaded.\n");
 
 	Chip8Disassembler chip8Disassembler;
-	chip8Disassembler.disassemble(chip8Processor.getPC(), chip8Processor.getApplicationSize(), chip8Processor.getMemoryStart());
+	chip8Disassembler.disassemble(chip8Processor.getPC(), static_cast<word>(chip8Processor.getApplicationSize()), chip8Processor.getMemoryStart());
 
 	std::chrono::high_resolution_clock::time_point then = std::chrono::high_resolution_clock::now();
 
 	// Main application loop
-	while (!chip8Processor.quitFlag)
+	while (chip8Processor.quitFlag == 0)
 	{
 		std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
-		float duration = std::chrono::duration_cast<std::chrono::duration<float>>(then - now).count();
+		float duration = std::chrono::duration_cast<std::chrono::duration<float>>(now - then).count();
 		
 		// The Chip8 runs at a clock speed of 500Hz
 		if (duration < 0.002f)
@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
 		chip8Processor.newCycle();
 
 		// Draw whenever a clear / display OpCode has been processed
-		if (chip8Processor.drawFlag)
+		if (chip8Processor.drawFlag == 1)
 			chip8Processor.updateDisplay();
 
 		// Update the input

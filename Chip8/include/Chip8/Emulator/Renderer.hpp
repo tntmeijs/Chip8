@@ -1,5 +1,9 @@
 #pragma once
 
+#include "GL/gl3w.h"
+
+#include <vector>
+
 // Forward declarations
 class Window;
 
@@ -13,5 +17,5 @@ public:
 	void draw() const;
 
 private:
-
+	std::vector<GLfloat> m_quadVertices;
 };

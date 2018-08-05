@@ -7,7 +7,7 @@
 
 int main(int argc, char const *argv[])
 {	
-	const char * GAME_PATH = "../roms/games/Missile [David Winter].ch8";
+	const char *GAME_PATH = "../roms/games/Missile [David Winter].ch8";
 
 	Chip8Processor chip8Processor;
 	chip8Processor.initialize();
@@ -26,7 +26,8 @@ int main(int argc, char const *argv[])
 	if (!window.create("Chip8 emulation - Tahar Meijs", 640, 320, 3, 3))
 		return -1;
 
-	renderer.initialize(window);
+	if (!renderer.initialize(window))
+		return -1;
 
 	printf("ROM successfully loaded.\n");
 

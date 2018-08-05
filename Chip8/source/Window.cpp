@@ -7,6 +7,8 @@
 
 Window::Window()
 	: m_windowHandle(nullptr)
+	, m_windowWidth(0)
+	, m_windowHeight(0)
 {
 }
 
@@ -65,6 +67,16 @@ void Window::quit() const
 void Window::pollKeyboard() const
 {
 	glfwPollEvents();
+}
+
+int Window::getWidth() const
+{
+	return m_windowWidth;
+}
+
+int Window::getHeight() const
+{
+	return m_windowHeight;
 }
 
 void Window::errorCallback(int error, const char *description)

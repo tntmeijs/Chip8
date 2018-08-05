@@ -1,6 +1,7 @@
 #include "Chip8/Emulator/Processor.hpp"
 #include "Chip8/Utility/DataTypes.hpp"
 #include "Chip8/Emulator/Window.hpp"
+#include "Chip8/Emulator/Renderer.hpp"
 
 #include <fstream>
 #include <random>
@@ -310,8 +311,14 @@ void Chip8Processor::newCycle()
 	m_PC += 2;
 }
 
-void Chip8Processor::updateDisplay()
+void Chip8Processor::updateDisplay(const Window & window, const Renderer & renderer)
 {
+	// Render the new frame
+	renderer.draw();
+
+	// Swap framebuffers
+	window.display();
+
 	drawFlag = 0;
 }
 

@@ -4,6 +4,7 @@
 
 // Forward declarations
 class Window;
+class Renderer;
 
 class Chip8Processor
 {
@@ -14,7 +15,7 @@ public:
 	void initialize();
 	bool loadGame(const char *name);
 	void newCycle();
-	void updateDisplay();
+	void updateDisplay(const Window & window, const Renderer & renderer);
 	void updateKeys(const Window & window);
 	void updateTimers();
 	void finalize();

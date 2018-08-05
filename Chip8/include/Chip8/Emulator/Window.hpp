@@ -13,9 +13,12 @@ public:
 	
 	void quit() const;
 	void pollKeyboard() const;
+	void display() const;
 
 	int getWidth() const;
 	int getHeight() const;
+
+	void getFramebufferDimensions(int & widthStorage, int & heightStorage) const;
 
 private:
 	static void errorCallback(int error, const char *description);

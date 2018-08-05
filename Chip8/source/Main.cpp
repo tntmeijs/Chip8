@@ -3,6 +3,7 @@
 
 #include "Chip8/Emulator/Processor.hpp"
 #include "Chip8/Emulator/Window.hpp"
+#include "Chip8/Emulator/Renderer.hpp"
 
 int main(int argc, char const *argv[])
 {	
@@ -20,9 +21,12 @@ int main(int argc, char const *argv[])
 	}
 
 	Window window;
+	Renderer renderer;
 
 	if (!window.create("Chip8 emulation - Tahar Meijs", 640, 320, 3, 3))
 		return -1;
+
+	renderer.initialize(window);
 
 	printf("ROM successfully loaded.\n");
 
@@ -47,7 +51,9 @@ int main(int argc, char const *argv[])
 
 		// Draw whenever a clear / display OpCode has been processed
 		if (chip8Processor.drawFlag == 1)
-			chip8Processor.updateDisplay();
+		{
+			chip8Processor.updateDisplay(window, renderer);
+		}
 
 		// Update the input
 		chip8Processor.updateKeys(window);

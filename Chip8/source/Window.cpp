@@ -69,6 +69,11 @@ void Window::pollKeyboard() const
 	glfwPollEvents();
 }
 
+void Window::display() const
+{
+	glfwSwapBuffers(m_windowHandle);
+}
+
 int Window::getWidth() const
 {
 	return m_windowWidth;
@@ -77,6 +82,11 @@ int Window::getWidth() const
 int Window::getHeight() const
 {
 	return m_windowHeight;
+}
+
+void Window::getFramebufferDimensions(int & widthStorage, int & heightStorage) const
+{
+	glfwGetFramebufferSize(m_windowHandle, &widthStorage, &heightStorage);
 }
 
 void Window::errorCallback(int error, const char *description)

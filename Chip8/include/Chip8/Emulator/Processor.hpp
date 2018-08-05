@@ -2,6 +2,9 @@
 
 #include "Chip8/Utility/DataTypes.hpp"
 
+// Forward declarations
+class Window;
+
 class Chip8Processor
 {
 public:
@@ -12,7 +15,7 @@ public:
 	bool loadGame(const char *name);
 	void newCycle();
 	void updateDisplay();
-	void updateKeys();
+	void updateKeys(const Window & window);
 	void updateTimers();
 	void finalize();
 

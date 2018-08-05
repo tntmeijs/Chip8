@@ -2,28 +2,29 @@
 #include <chrono>
 
 #include "Chip8/Emulator/Processor.hpp"
-#include "Chip8/Utility/Disassembler.hpp"
+#include "Chip8/Emulator/Window.hpp"
 
 int main(int argc, char const *argv[])
-{
-	// TODO: add OpenGL initialization
-	// TODO: add GLFW3 input initialization
+{	
+	const char * GAME_PATH = "../roms/games/Missile [David Winter].ch8";
 
 	Chip8Processor chip8Processor;
 	chip8Processor.initialize();
 
 	// Crash the emulator when loading fails
-	if (!chip8Processor.loadGame("../roms/games/Missile [David Winter].ch8"))
+	if (!chip8Processor.loadGame(GAME_PATH))
 	{
 		printf("Failed to the ROM.\n");
 		std::cin.get();
 		return -1;
 	}
 
-	printf("ROM successfully loaded.\n");
+	Window window;
 
-	Chip8Disassembler chip8Disassembler;
-	chip8Disassembler.disassemble(chip8Processor.getPC(), static_cast<word>(chip8Processor.getApplicationSize()), chip8Processor.getMemoryStart());
+	if (!window.create("Chip8 emulation - Tahar Meijs", 640, 320, 3, 3))
+		return -1;
+
+	printf("ROM successfully loaded.\n");
 
 	std::chrono::high_resolution_clock::time_point then = std::chrono::high_resolution_clock::now();
 
@@ -49,11 +50,13 @@ int main(int argc, char const *argv[])
 			chip8Processor.updateDisplay();
 
 		// Update the input
-		chip8Processor.updateKeys();
+		chip8Processor.updateKeys(window);
 
 		// Update the emulator global timer
 		then = now;
 	}
+
+	window.quit();
 
     return 0;
 }

@@ -12,14 +12,18 @@ set(HEADER_FILES
 
     ${PROJECT_SOURCE_DIR}/include/Chip8/Utility/DataTypes.hpp
     ${PROJECT_SOURCE_DIR}/include/Chip8/Utility/Disassembler.hpp
-    ${PROJECT_SOURCE_DIR}/include/Chip8/Emulator/Processor.hpp)
+    ${PROJECT_SOURCE_DIR}/include/Chip8/Emulator/Processor.hpp
+    ${PROJECT_SOURCE_DIR}/include/Chip8/Emulator/Renderer.hpp
+    ${PROJECT_SOURCE_DIR}/include/Chip8/Emulator/Window.hpp)
 
 set(SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/thirdparty/gl3w-master/src/gl3w.c
 
     ${PROJECT_SOURCE_DIR}/source/Main.cpp
     ${PROJECT_SOURCE_DIR}/source/Disassembler.cpp
-    ${PROJECT_SOURCE_DIR}/source/Processor.cpp)
+    ${PROJECT_SOURCE_DIR}/source/Processor.cpp
+    ${PROJECT_SOURCE_DIR}/source/Renderer.cpp
+    ${PROJECT_SOURCE_DIR}/source/Window.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
     ${CMAKE_BINARY_DIR}/bin)

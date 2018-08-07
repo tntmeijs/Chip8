@@ -56,6 +56,9 @@ bool Window::create(const char * title, int width, int height, int glVersionMajo
 
 	printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+	m_windowWidth = width;
+	m_windowHeight = height;
+
 	return true;
 }
 

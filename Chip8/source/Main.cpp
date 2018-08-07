@@ -52,9 +52,7 @@ int main(int argc, char const *argv[])
 
 		// Draw whenever a clear / display OpCode has been processed
 		if (chip8Processor.drawFlag == 1)
-		{
 			chip8Processor.updateDisplay(window, renderer);
-		}
 
 		// Update the input
 		chip8Processor.updateKeys(window);

@@ -7,7 +7,7 @@
 
 int main(int argc, char const *argv[])
 {	
-	const char *GAME_PATH = "../roms/games/Missile [David Winter].ch8";
+	const char *GAME_PATH = "../roms/games/Animal Race [Brian Astle].ch8";
 
 	Chip8Processor chip8Processor;
 	chip8Processor.initialize();

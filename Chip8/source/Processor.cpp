@@ -313,6 +313,9 @@ void Chip8Processor::newCycle()
 
 void Chip8Processor::updateDisplay(const Window & window, const Renderer & renderer)
 {
+	// Save the new framebuffer to the render texture
+	renderer.updatePixels(m_graphicsMemory);
+
 	// Render the new frame
 	renderer.draw();
 
@@ -525,7 +528,6 @@ void Chip8Processor::RNDvxbyte(word opCode)
 	m_V[(opCode & 0x0F00) >> 8] = randomValue & (opCode & 0x00FF);
 }
 
-// TODO: add a setting for the end user to toggle screen coordinate wrapping
 // Dxyn - DRW Vx, Vy, nibble (The interpreter reads n bytes from memory, starting at the address stored in I. These bytes are then
 //							  displayed as sprites on screen at coordinates (Vx, Vy). Sprites are XORed onto the existing screen.
 //							  If this causes any pixels to be erased, VF is set to 1, otherwise it is set to 0. If the sprite is positioned
@@ -536,6 +538,9 @@ void Chip8Processor::DRWvxvynibble(word opCode)
 	byte coordinateY	= m_V[(opCode & 0x00F0) >> 4];
 	byte numOfBytes		= (opCode & 0x000F);
 
+	// Reset the Vf register
+	m_V[0xF] = 0;
+
 	// Loop through every byte of the sprite
 	for (byte i = 0; i < numOfBytes; ++i)
 	{
@@ -544,26 +549,16 @@ void Chip8Processor::DRWvxvynibble(word opCode)
 
 		for (byte j = 0; j < 8; ++j)
 		{
-			// Check each individual bit in the byte
-			byte valueOfBit = (spriteData & (1 << j)) >> j;
-
-			// X position of this pixel
-			byte posX = coordinateX + j;
-
-			// Wrap around the screen
-			if (posX > 63)
-				posX -= 63;
-
-			byte valueOfPixelInGraphicsArray = m_graphicsMemory[posX + (coordinateY * 64)];
-
-			// Check whether a pixel is going to be overwritten when drawing this sprite
-			if (valueOfBit != valueOfPixelInGraphicsArray)
-				m_V[0xF] = 1;
-			else
-				m_V[0xF] = 0;
-
-			// Apply the new pixel
-			m_graphicsMemory[posX + (coordinateY * 64)] = valueOfBit;
+			// Check every bit of the byte
+			if ((spriteData & (0x80 >> j)) != 0)
+			{
+				// If the pixel on the display is already set to one, the Vf register needs to be set
+				if (m_graphicsMemory[(coordinateX + j + ((coordinateY + i) * 64))] == 1)
+					m_V[0xF] = 1;
+				
+				// XOR the new pixel value with the existing screen pixel value
+				m_graphicsMemory[coordinateX + j + ((coordinateY + i) * 64)] ^= 1;
+			}
 		}
 	}
 

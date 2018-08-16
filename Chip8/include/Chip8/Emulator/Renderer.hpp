@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Chip8/Utility/DataTypes.hpp"
+
 #include "GL/gl3w.h"
 
 // Forward declarations
@@ -13,10 +15,11 @@ public:
 
 	bool initialize(const Window & window);
 	void draw() const;
+	void updatePixels(byte *graphicsMemory) const;
 
 private:
 	bool setupShaders();
-	void setupTexture(int width, int height);
+	void setupTexture();
 	void setupQuad();
 
 private:

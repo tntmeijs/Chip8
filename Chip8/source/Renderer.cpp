@@ -1,5 +1,6 @@
 #include "Chip8/Emulator/Renderer.hpp"
 #include "Chip8/Emulator/Window.hpp"
+#include "Chip8/Utility/DataTypes.hpp"
 
 #include "GL/gl3w.h"
 
@@ -34,7 +35,7 @@ bool Renderer::initialize(const Window & window)
 	glUniform1i(glGetUniformLocation(m_shader, "textureID"), 0);
 	glUseProgram(0);
 
-	setupTexture(width, height);
+	setupTexture();
 	setupQuad();
 
 	return true;
@@ -59,6 +60,13 @@ void Renderer::draw() const
 	glUseProgram(0);
 }
 
+void Renderer::updatePixels(byte *graphicsMemory) const
+{
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 64, 32, GL_RED, GL_UNSIGNED_BYTE, graphicsMemory);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 bool Renderer::setupShaders()
 {
 	const GLchar *const vertexShaderSourceCode =	"#version 330 core\n"
@@ -80,7 +88,7 @@ bool Renderer::setupShaders()
 													"uniform sampler2D textureID;\n"
 
 													"void main() {\n"
-														"float grayscaleValue = texture(textureID, uv).r;\n"
+														"float grayscaleValue = texture(textureID, vec2(uv.x, 1.0 - uv.y)).r * 255.0;\n"
 														"fragColor = vec4(grayscaleValue, grayscaleValue, grayscaleValue, 1.0);\n"
 													"}\0";
 
@@ -171,7 +179,7 @@ bool Renderer::setupShaders()
 	return true;
 }
 
-void Renderer::setupTexture(int width, int height)
+void Renderer::setupTexture()
 {
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -179,7 +187,7 @@ void Renderer::setupTexture(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 64, 32, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

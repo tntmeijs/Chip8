@@ -157,11 +157,11 @@ void Chip8Disassembler::printOpCode(word opCode)
 		switch (opCode & 0x00FF)
 		{
 		case 0x009E:
-			printf("SKP\tV%1X\n", (opCode & 0x0F00) >> 8);
+			printf("SKP\tkeys[V%1X]\n", (opCode & 0x0F00) >> 8);
 			break;
 
 		case 0x00A1:
-			printf("SKNP\tV%1X\n", (opCode & 0x0F00) >> 8);
+			printf("SKNP\tkeys[V%1X]\n", (opCode & 0x0F00) >> 8);
 			break;
 
 		default:

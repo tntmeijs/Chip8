@@ -7,7 +7,7 @@
 
 int main(int argc, char const *argv[])
 {	
-	const char *GAME_PATH = "../roms/games/Animal Race [Brian Astle].ch8";
+	const char *GAME_PATH = "../roms/games/Rocket Launcher.ch8";
 
 	Chip8Processor chip8Processor;
 	chip8Processor.initialize();
@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
 		std::cin.get();
 		return -1;
 	}
-
+	
 	Window window;
 	Renderer renderer;
 

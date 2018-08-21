@@ -2,6 +2,7 @@
 #include "Chip8/Utility/DataTypes.hpp"
 #include "Chip8/Emulator/Window.hpp"
 #include "Chip8/Emulator/Renderer.hpp"
+#include "Chip8/Utility/Disassembler.hpp"
 
 #include <fstream>
 #include <random>
@@ -30,25 +31,50 @@ void Chip8Processor::initialize()
 	m_finalizeCalled	= 0;		// Reset finalization flag
 	m_applicationSize	= 0;		// Reset the size of the loaded application or game
 
+	// Chip8 fontset
+	byte fontset[80] =
+	{
+		0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+		0x20, 0x60, 0x20, 0x20, 0x70, // 1
+		0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+		0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+		0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+		0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+		0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+		0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+		0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+		0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+		0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+		0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+		0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+		0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+		0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+		0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+	};
+
 	// Reset the memory
 	m_memory = new byte[MEMORY_SIZE_BYTES];
 	for (size_t i = 0; i < MEMORY_SIZE_BYTES; ++i)
 		m_memory[i] = 0;
 
+	// Save the fontset in memory
+	for (size_t j = 0; j < 80; ++j)
+		m_memory[j] = fontset[j];
+
 	// Reset the graphics memory
 	m_graphicsMemory = new byte[64 * 32];
-	for (size_t j = 0; j < 64 * 32; ++j)
-		m_graphicsMemory[j] = 0;
+	for (size_t k = 0; k < 64 * 32; ++k)
+		m_graphicsMemory[k] = 0;
 
 	// Reset registers, stack, and keys
 	m_V		= new byte[16];
 	m_key	= new byte[16];
 	m_stack = new word[16];
-	for (size_t k = 0; k < 16; ++k)
+	for (size_t m = 0; m < 16; ++m)
 	{
-		m_V[k]		= 0;
-		m_key[k]	= 0;
-		m_stack[k]	= 0;
+		m_V[m]		= 0;
+		m_key[m]	= 0;
+		m_stack[m]	= 0;
 	}
 }
 
@@ -86,6 +112,8 @@ void Chip8Processor::newCycle()
 {
 	// Fetch OpCode (combines two bytes into a word)
 	word opCode = m_memory[m_PC] << 8 | m_memory[m_PC + 1];
+
+	Chip8Disassembler::printOpCode(opCode);
 
 	// TODO: use function pointers instead of this horrible switch statement
 	// Decode the first number of the OpCode
@@ -306,9 +334,6 @@ void Chip8Processor::newCycle()
 	default:
 		break;
 	}
-
-	// Advance to the next instruction
-	m_PC += 2;
 }
 
 void Chip8Processor::updateDisplay(const Window & window, const Renderer & renderer)
@@ -370,11 +395,14 @@ void Chip8Processor::CLS(word opCode)
 {
 	for (size_t i = 0; i < 64 * 32; ++i)
 		m_graphicsMemory[i] = 0;
+
+	m_PC += 2;
 }
 
 void Chip8Processor::RET(word opCode)
 {
 	m_PC = m_stack[m_SP--];
+	m_PC += 2;
 }
 
 void Chip8Processor::SYSaddr(word opCode)
@@ -396,49 +424,61 @@ void Chip8Processor::CALLaddr(word opCode)
 void Chip8Processor::SEvxbyte(word opCode)
 {
 	if (m_V[(opCode & 0x0F00) >> 8] == (opCode & 0x00FF))
+		m_PC += 4;
+	else
 		m_PC += 2;
 }
 
 void Chip8Processor::SNEvxbyte(word opCode)
 {
 	if (m_V[(opCode & 0x0F00) >> 8] != (opCode & 0x00FF))
+		m_PC += 4;
+	else
 		m_PC += 2;
 }
 
 void Chip8Processor::SEvxvy(word opCode)
 {
 	if (m_V[(opCode & 0x0F00) >> 8] == m_V[(opCode & 0x00F0) >> 4])
+		m_PC += 4;
+	else
 		m_PC += 2;
 }
 
 void Chip8Processor::LDvxbyte(word opCode)
 {
-	m_V[(opCode & 0x0F00) >> 8] = opCode & 0x00FF;
+	m_V[(opCode & 0x0F00) >> 8] = (opCode & 0x00FF);
+	m_PC += 2;
 }
 
 void Chip8Processor::ADDvxbyte(word opCode)
 {
-	m_V[(opCode & 0x0F00) >> 8] += opCode & 0x00FF;
+	m_V[(opCode & 0x0F00) >> 8] += (opCode & 0x00FF);
+	m_PC += 2;
 }
 
 void Chip8Processor::LDvxvy(word opCode)
 {
 	m_V[(opCode & 0x0F00) >> 8] = m_V[(opCode & 0x00F0) >> 4];
+	m_PC += 2;
 }
 
 void Chip8Processor::ORvxvy(word opCode)
 {
 	m_V[(opCode & 0x0F00) >> 8] |= m_V[(opCode & 0x00F0) >> 4];
+	m_PC += 2;
 }
 
 void Chip8Processor::ANDvxvy(word opCode)
 {
 	m_V[(opCode & 0x0F00) >> 8] &= m_V[(opCode & 0x00F0) >> 4];
+	m_PC += 2;
 }
 
 void Chip8Processor::XORvxvy(word opCode)
 {
 	m_V[(opCode & 0x0F00) >> 8] ^= m_V[(opCode & 0x00F0) >> 4];
+	m_PC += 2;
 }
 
 void Chip8Processor::ADDvxvy(word opCode)
@@ -446,13 +486,12 @@ void Chip8Processor::ADDvxvy(word opCode)
 	// Add Vy to Vx
 	m_V[(opCode & 0x0F00) >> 8] += m_V[(opCode & 0x00F0) >> 4];
 
-	// Check whether the sum of the values of the two registers exceed 8 bits (0xFF)
-	// This calculation checks whether the value of X is bigger than the maximum (255) minus the value of Y,
-	// if it is, it means that the value caused the byte to start counting from zero again.
-	if (m_V[(opCode & 0x0F00) >> 8] > 0xFF - m_V[(opCode & 0x00F0) >> 4])
+	if (m_V[(opCode & 0x0F00) >> 8] > 0xFF)
 		m_V[0xF] = 1;	// Carry flag set
 	else
 		m_V[0xF] = 0;	// Carry flag unset
+
+	m_PC += 2;
 }
 
 void Chip8Processor::SUBvxvy(word opCode)
@@ -463,6 +502,8 @@ void Chip8Processor::SUBvxvy(word opCode)
 		m_V[0xF] = 0;
 
 	m_V[(opCode & 0x0F00) >> 8] -= m_V[(opCode & 0x00F0) >> 4];
+
+	m_PC += 2;
 }
 
 void Chip8Processor::SHRvxvy(word opCode)
@@ -472,8 +513,9 @@ void Chip8Processor::SHRvxvy(word opCode)
 	else
 		m_V[0xF] = 0;
 
-	// Divide the value of Vx by 2
 	m_V[(opCode & 0x0F00) >> 8] /= 2;
+
+	m_PC += 2;
 }
 
 void Chip8Processor::SUBNvxvy(word opCode)
@@ -483,8 +525,9 @@ void Chip8Processor::SUBNvxvy(word opCode)
 	else
 		m_V[0xF] = 0;	// No borrow flag unset
 
-						// Subtract Vy from Vx
-	m_V[(opCode & 0x0F00) >> 8] -= m_V[(opCode & 0x00F0) >> 4];
+	m_V[(opCode & 0x0F00) >> 8] = m_V[(opCode & 0x00F0) >> 4] - m_V[(opCode & 0x0F00) >> 8];
+
+	m_PC += 2;
 }
 
 void Chip8Processor::SHLvxvy(word opCode)
@@ -495,19 +538,23 @@ void Chip8Processor::SHLvxvy(word opCode)
 	else
 		m_V[0xF] = 0;
 
-	// Multiply the value of Vx by 2
 	m_V[(opCode & 0x0F00) >> 8] *= 2;
+
+	m_PC += 2;
 }
 
 void Chip8Processor::SNEvxvy(word opCode)
 {
 	if (m_V[(opCode & 0x0F00) >> 8] != m_V[(opCode & 0x00F0) >> 4])
+		m_PC += 4;
+	else
 		m_PC += 2;
 }
 
 void Chip8Processor::LDiaddr(word opCode)
 {
 	m_I = (opCode & 0X0FFF);
+	m_PC += 2;
 }
 
 void Chip8Processor::JPv0addr(word opCode)
@@ -526,6 +573,8 @@ void Chip8Processor::RNDvxbyte(word opCode)
 
 	// Perform bit-wise AND on kk and the random number, then store the result in register Vx
 	m_V[(opCode & 0x0F00) >> 8] = randomValue & (opCode & 0x00FF);
+
+	m_PC += 2;
 }
 
 // Dxyn - DRW Vx, Vy, nibble (The interpreter reads n bytes from memory, starting at the address stored in I. These bytes are then
@@ -563,69 +612,99 @@ void Chip8Processor::DRWvxvynibble(word opCode)
 	}
 
 	drawFlag = 1;
+	m_PC += 2;
 }
 
 void Chip8Processor::SKPvx(word opCode)
 {
-	if (m_V[(opCode & 0x0F00) >> 8] == 1)	// Key down, contact
+	if (m_key[m_V[(opCode & 0x0F00) >> 8]] == 1)	// Key down, contact
+		m_PC += 4;
+	else
 		m_PC += 2;
 }
 
 void Chip8Processor::SKNPvx(word opCode)
 {
-	if (m_V[(opCode & 0x0F00) >> 8] == 0)	// Key up, no contact
+	if (m_key[m_V[(opCode & 0x0F00) >> 8]] == 0)	// Key up, no contact
+		m_PC += 4;
+	else
 		m_PC += 2;
 }
 
 void Chip8Processor::LDvxdt(word opCode)
 {
 	m_V[(opCode & 0x0F00) >> 8] = m_delayTimer;
+	m_PC += 2;
 }
 
 void Chip8Processor::LDvxk(word opCode)
 {
+	byte keyPressed = 0;
+
 	for (byte i = 0; i < 16; ++i)
+	{
 		if (m_key[i] == 1)
-			m_V[(opCode & 0x0F00) >> 8] = m_key[i];
+		{
+			m_V[(opCode & 0x0F00) >> 8] = i;
+			keyPressed = 1;
+		}
+	}
+
+	// Keep waiting for a key press...
+	if (keyPressed == 0)
+		return;
+
+	// A key has been pressed, resume execution
+	m_PC += 2;
 }
 
 void Chip8Processor::LDdtvx(word opCode)
 {
 	m_delayTimer = m_V[(opCode & 0x0F00) >> 8];
+	m_PC += 2;
 }
 
 void Chip8Processor::LDstvx(word opCode)
 {
 	m_soundTimer = m_V[(opCode & 0x0F00) >> 8];
+	m_PC += 2;
 }
 
 void Chip8Processor::ADDivx(word opCode)
 {
 	m_I += m_V[(opCode & 0x0F00) >> 8];
+	m_PC += 2;
 }
 
 void Chip8Processor::LDfvx(word opCode)
 {
-	m_I = m_V[(opCode & 0x0F00) >> 8];
+	m_I = m_memory[m_V[(opCode & 0x0F00) >> 8]];
+	m_PC += 2;
 }
 
 void Chip8Processor::LDbvx(word opCode)
 {
 	byte value = m_V[(opCode & 0x0F00) >> 8];
 
-	m_memory[m_I + 0] = value / 100;		// Ones
+	m_memory[m_I + 0] = value / 100;		// Hundreds
 	m_memory[m_I + 1] = (value / 10) % 10;	// Tens
-	m_memory[m_I + 2] = value % 10;			// Hundreds
+	m_memory[m_I + 2] = (value % 100) % 10;	// Ones
+
+	m_PC += 2;
 }
 
 void Chip8Processor::LDivx(word opCode)
 {
 	for (byte i = 0; i < ((opCode & 0x0F00) >> 8); ++i)
 		m_memory[m_I + i] = m_V[i];
+
+	m_PC += 2;
 }
 
 void Chip8Processor::LDvxi(word opCode)
 {
 	for (byte i = 0; i < ((opCode & 0x0F00) >> 8); ++i)
 		m_V[i] = m_memory[m_I + i];
+
+	m_PC += 2;
 }

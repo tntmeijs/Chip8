@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Chip8/Utility/DataTypes.hpp"
+
 // Forward declarations
 struct GLFWwindow;
 
@@ -19,6 +21,9 @@ public:
 	int getHeight() const;
 
 	void getFramebufferDimensions(int & widthStorage, int & heightStorage) const;
+
+public:
+	static byte *m_hexKeyPad;
 
 private:
 	static void errorCallback(int error, const char *description);

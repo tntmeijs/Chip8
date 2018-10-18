@@ -7,7 +7,7 @@
 
 int main(int argc, char const *argv[])
 {	
-	const char *GAME_PATH = "../roms/games/Rocket Launcher.ch8";
+	const char *GAME_PATH = "../roms/games/Breakout [Carmelo Cortez, 1979].ch8";
 
 	Chip8Processor chip8Processor;
 	chip8Processor.initialize();

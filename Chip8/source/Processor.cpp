@@ -352,6 +352,9 @@ void Chip8Processor::updateDisplay(const Window & window, const Renderer & rende
 
 void Chip8Processor::updateKeys(const Window & window)
 {
+	for (byte i = 0; i < 16; ++i)
+		m_key[i] = Window::m_hexKeyPad[i];
+
 	window.pollKeyboard();
 }
 

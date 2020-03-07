@@ -4,7 +4,7 @@ This repository contains the code for my working Chip8 emulator. This is my firs
 
 I'm no longer actively working on this project. Feel free to use this repository as you see fit. I do not own any of the ROMs supplied in this repository. I found this online too, as you can read in `Chip8/roms/README`.
 
-Check out my post history on Twitter (@tntmeijs) to see some footage of this emulator in action.
+
 
 **Useful resources:**
 - http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
@@ -94,9 +94,7 @@ Therefore, using this register as a regular register should be avoided.
 An OpCode is 2 bytes wide, this means that when reading from memory, we have
 to combine two bytes into one word / short / 16-bit data structure.
 
-Combining 0xA4 and 0x5F:
-    1010 0100   0xA4
-    0101 1111   0x5F
+**Combine 0xA4 and 0x5F:**
 
     Shifting 0xA4 8 to the left (<<) gives:
         1010 0100 0000 0000     0xA4 << 8
@@ -107,9 +105,10 @@ Combining 0xA4 and 0x5F:
         ------------------- |
         1010 0100 0101 1111
 
-Decoding OpCode 0x9C1B:
-    - You can quickly narrow down the OpCode type by looking at the
-      number that comes right after the "0x", e.g.: 9.
+**Decode OpCode 0x9C1B:**
+
+    You can quickly narrow down the OpCode type by looking at the
+    number that comes right after the "0x", e.g.: 9.
     
     Retrieving the left-most value of the OpCode can be done by
     using a bit-wise AND (&) operation:
@@ -122,7 +121,8 @@ Decoding OpCode 0x9C1B:
     dealing with is "9XY0". This skips the next instruction if VX doesn't equal VY.
     (Usually the next instruction is a jump to skip a code block).
 
-Decoding OpCode 0x8FE2:
+**Decode OpCode 0x8FE2:**
+
     Get the first number after "0x":
         1000 1111 1110 0010     0x8FE2
         1111 0000 0000 0000     0xF000

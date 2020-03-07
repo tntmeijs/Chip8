@@ -1,13 +1,17 @@
-This file is used to list all important information about the Chip8 architecture.
-Please bear in mind that this document is a personal notepad. It is by no means an
-official document that can be relied upon.
+# Introduction
 
-https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description
+This repository contains the code for my working Chip8 emulator. This is my first attempt at writing any kind of emulator. The emulator is capable of playing breakout. There are still some bugs, but it's usable.
 
-http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+I'm no longer actively working on this project. Feel free to use this repository as you see fit. I do not own any of the ROMs supplied in this repository. I found this online too, as you can read in `Chip8/roms/README`.
 
-That being said, most of this information should be correct. Feel free to use it
-as you see fit. Just bear in mind that I may have made some mistakes while writing this.
+Check out my post history on Twitter (@tntmeijs) to see some footage of this emulator in action.
+
+**Useful resources:**
+- http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+- https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description
+
+# Chip8 information
+When I wrote this application, I had a hard time figuring out how the Chip8 system is supposed to work. There's information out there, but it's all a bit spread apart. This README is a collection of notes that I created as I worked on this application.
 
 ### REGISTERS
 ---

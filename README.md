@@ -9,10 +9,8 @@ http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 That being said, most of this information should be correct. Feel free to use it
 as you see fit. Just bear in mind that I may have made some mistakes while writing this.
 
-=================
-=== REGISTERS ===
-=================
-
+### REGISTERS
+---
 The address register of the Chip8 is called "I" and is 16 bits wide.
 The program counter, "PC", is 16 bits wide as well.
 
@@ -41,10 +39,8 @@ The "VF" register is special, as it doubles as a flag:
 
 Therefore, using this register as a regular register should be avoided.
 
-==============
-=== MEMORY ===
-==============
-
+### MEMORY
+---
 - The Chip8 has 4096 memory locations (0x1000), each 1 byte wide.
 - The first 512 bytes (0x200) is where the Chip8 interpreter used to live.
   Nowadays, this memory is used for additional (font) information, as emulators
@@ -55,26 +51,21 @@ Therefore, using this register as a regular register should be avoided.
 - The 96 bytes below the display refresh reserved memory is reserved for
   call stack / internal use / other variables.
 
-=============
-=== STACK ===
-=============
-
+### STACK
+---
 - The stack only stores subroutine return addresses.
 - Originally, 48 bytes were allocated for the stack, allowing up to 24 levels of
   nesting to be stored. These days, the stack stores at least 16 levels.
 
-==============
-=== TIMERS ===
-==============
+### TIMERS
+---
 - Chip8 has two timers, a delay timer and a sound timer. Both count down at a speed
   of 60 Hz and stop when they reach zero.
 - Sound timer is used to play sound effects. A beep is played when the timer value is non-zero.
 - Delay timer is used in games. The application has read / write access to this timer.
 
-================
-=== GRAPHICS ===
-================
-
+### GRAPHICS
+---
 - Monochrone black / white display.
 - Resolution of 64x32 pixels.
 - Sprites are 8 pixels wide and 1 to 15 pixels tall.
@@ -84,9 +75,8 @@ Therefore, using this register as a regular register should be avoided.
   pixels are flipped from set to unset when drawing a sprite. Otherwise it is set to 0.
   This is used for collision detection.
 
-=============
-=== INPUT ===
-=============
+### INPUT
+---
 - Hexadecimal key input.
 - Key values are in the range 0x0 to 0xF.
 - Usually, keys 2 / 4 / 6 / 8 are used for directional input.
@@ -95,10 +85,8 @@ Therefore, using this register as a regular register should be avoided.
     - One skips an instruction when a specific key is released.
     - One waits for a key press and stores it in one of the data registers.
 
-===============
-=== OpCodes ===
-===============
-
+### OpCodes
+---
 An OpCode is 2 bytes wide, this means that when reading from memory, we have
 to combine two bytes into one word / short / 16-bit data structure.
 

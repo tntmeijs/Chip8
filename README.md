@@ -9,8 +9,6 @@ http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 That being said, most of this information should be correct. Feel free to use it
 as you see fit. Just bear in mind that I may have made some mistakes while writing this.
 
-- Tahar Meijs
-
 =================
 === REGISTERS ===
 =================
